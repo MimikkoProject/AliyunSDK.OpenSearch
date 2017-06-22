@@ -262,12 +262,25 @@ namespace AliCloudOpenSearch.com.API
         /// <param name="key">密钥</param>
         /// <param name="data">要签名的数据</param>
         /// <returns></returns>
-        private static string HmacSha1Sign(string key, string data)
+        private static string HmacSha1Sign(string key, string text)
         {
-            var signer = new System.Security.Cryptography.HMACSHA1();
-            signer.Key = Encoding.UTF8.GetBytes(key.ToCharArray());
-            return Convert.ToBase64String(
-                signer.ComputeHash(Encoding.UTF8.GetBytes(data.ToCharArray())));
+            var encode = Encoding.GetEncoding("utf-8");
+            var byteData = encode.GetBytes(text);
+            var byteKey = encode.GetBytes(key);
+#if NETCORE
+            using (var signer = new HMACSHA1(byteKey))
+            {
+                return Convert.ToBase64String(
+                    signer.ComputeHash(byteData));
+            }
+#else
+            using (var hmac = new HMACSHA1(byteKey))
+            {
+                var cs = new CryptoStream(Stream.Null, hmac, CryptoStreamMode.Write);
+                cs.Write(byteData, 0, byteData.Length);
+                return Convert.ToBase64String(hmac.Hash);
+            }
+#endif
         }
 
         /// <summary>
