@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+#if NETCORE
+using HttpUtility = Mono.Web.HttpUtility;
+#else
+using HttpUtility = System.Web.HttpUtility;
+#endif
+
 namespace AliCloudOpenSearch.com.API
 {
     public class HttpBuildQueryHelper
@@ -14,7 +20,7 @@ namespace AliCloudOpenSearch.com.API
                 return null;
             }
             var stringToEncode =
-                System.Net.WebUtility.UrlEncode(str)
+                HttpUtility.UrlEncode(str)
                     .Replace("+", "%20")
                     .Replace("*", "%2A")
                     .Replace("(", "%28")

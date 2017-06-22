@@ -14,6 +14,12 @@ using AliCloudOpenSearch.com.API.Modal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+#if NETCORE
+using HttpUtility = Mono.Web.HttpUtility;
+#else
+using HttpUtility = System.Web.HttpUtility;
+#endif
+
 namespace AliCloudOpenSearch.com.API
 {
     /// <summary>
@@ -164,7 +170,7 @@ namespace AliCloudOpenSearch.com.API
         /// <returns>转义后的字符串</returns>
         private static string UrlEncode(string value)
         {
-            value = System.Net.WebUtility.UrlEncode(value);
+            value = HttpUtility.UrlEncode(value);
             value = Regex.Replace(value, "(%[0-9a-f][0-9a-f])", c => c.Value.ToUpper());
             value = value.Replace("(", "%28")
                 .Replace(")", "%29")

@@ -14,7 +14,7 @@
       "dependencies": {
         "NETStandard.Library": "1.6.0",
         "System.Collections.NonGeneric": "4.3.0",
-        "System.Collections.Specialized": "4.3.0",
+        "Mono.HttpUtility": "1.0.6201.40002",
         "System.Net.Requests": "4.3.0",
         "System.Runtime.Serialization.Xml": "4.3.0",
         "System.Security.Cryptography.Algorithms": "4.3.0",
@@ -34,7 +34,8 @@
         "System.Security": "4.0.0.0",
         "System.Xml": "4.0.0.0",
         "System.Xml.Linq": "4.0.0.0",
-        "System.Xml.Serialization": "4.0.0.0"
+        "System.Xml.Serialization": "4.0.0.0",
+        "System.Web": "4.0.0.0"
       },
       "dependencies": {
       }

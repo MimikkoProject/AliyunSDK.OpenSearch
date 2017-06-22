@@ -6,6 +6,12 @@ using System.Threading;
 using AliCloudOpenSearch.com.API.Modal;
 using Newtonsoft.Json;
 
+#if NETCORE
+using HttpUtility = Mono.Web.HttpUtility;
+#else
+using HttpUtility = System.Web.HttpUtility;
+#endif
+
 namespace AliCloudOpenSearch.com.API
 {
     /// <summary>
@@ -316,7 +322,7 @@ namespace AliCloudOpenSearch.com.API
                         // 获取当前文档生成json并urlencode之后的size大小。
 
                         var json = JsonConvert.SerializeObject(doc);
-                        var currentSize = System.Net.WebUtility.UrlEncode(json).Length;
+                        var currentSize = HttpUtility.UrlEncode(json).Length;
 
                         // 如果计算的大小+buffer的大小大于等于限定的阀值self::PUSH_MAX_SIZE，则push
                         // buffer数据。
