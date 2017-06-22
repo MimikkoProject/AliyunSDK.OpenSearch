@@ -15,12 +15,13 @@
         "NETStandard.Library": "1.6.0",
         "System.Collections.NonGeneric": "4.3.0",
         "System.Collections.Specialized": "4.3.0",
+        "System.Net.Requests": "4.3.0",
         "System.Runtime.Serialization.Xml": "4.3.0",
+        "System.Security.Cryptography.Algorithms": "4.3.0",
         "System.Security.Cryptography.Primitives": "4.3.0",
         "System.Threading.Thread": "4.3.0",
         "System.Xml.XmlDocument": "4.3.0",
-        "System.Xml.XmlSerializer": "4.3.0",
-        "System.Net.Requests": "4.3.0"
+        "System.Xml.XmlSerializer": "4.3.0"
       },
       "buildOptions": {
         "define": [ "NETCORE" ]

@@ -260,25 +260,29 @@ namespace AliCloudOpenSearch.com.API
         /// HmacSha1签名算法
         /// </summary>
         /// <param name="key">密钥</param>
-        /// <param name="data">要签名的数据</param>
+        /// <param name="text">要签名的数据</param>
         /// <returns></returns>
         private static string HmacSha1Sign(string key, string text)
         {
             var encode = Encoding.GetEncoding("utf-8");
-            var byteData = encode.GetBytes(text);
-            var byteKey = encode.GetBytes(key);
 #if NETCORE
+            var byteData = encode.GetBytes(text.ToCharArray());
+            var byteKey = encode.GetBytes(key.ToCharArray());
             using (var signer = new HMACSHA1(byteKey))
             {
                 return Convert.ToBase64String(
                     signer.ComputeHash(byteData));
             }
 #else
+            var byteData = encode.GetBytes(text);
+            var byteKey = encode.GetBytes(key);
             using (var hmac = new HMACSHA1(byteKey))
             {
-                var cs = new CryptoStream(Stream.Null, hmac, CryptoStreamMode.Write);
-                cs.Write(byteData, 0, byteData.Length);
-                return Convert.ToBase64String(hmac.Hash);
+                using (var cs = new CryptoStream(Stream.Null, hmac, CryptoStreamMode.Write))
+                {
+                    cs.Write(byteData, 0, byteData.Length);
+                    return Convert.ToBase64String(hmac.Hash);
+                }
             }
 #endif
         }
