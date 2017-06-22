@@ -256,18 +256,50 @@ namespace AliCloudOpenSearch.com.API
         }
 
 
-        private string HmacSha1Sign(string text, string key)
+        /// <summary>
+        /// HmacSha1签名算法
+        /// </summary>
+        /// <param name="key">密钥</param>
+        /// <param name="data">要签名的数据</param>
+        /// <returns></returns>
+        private static string HmacSha1Sign(string key, string data)
         {
-            var encode = Encoding.GetEncoding("utf-8");
-            var byteData = encode.GetBytes(text);
-            var byteKey = encode.GetBytes(key);
-            using (var hmac = new HMACSHA1(byteKey))
-            {
-                //var cs = new CryptoStream(Stream.Null, hmac, CryptoStreamMode.Write);
-                //cs.Write(byteData, 0, byteData.Length);
-                //return Convert.ToBase64String(hmac.Hash);
-                return "";
-            }
+            var signer = new System.Security.Cryptography.HMACSHA1();
+            signer.Key = Encoding.UTF8.GetBytes(key.ToCharArray());
+            return Convert.ToBase64String(
+                signer.ComputeHash(Encoding.UTF8.GetBytes(data.ToCharArray())));
+        }
+
+        /// <summary>
+        /// Authorization字段计算的方法
+        /// </summary>
+        /// <param name="accessKeySecret">密钥</param>
+        /// <param name="httpMethod">表示HTTP 请求的Method，主要有PUT，GET，POST，HEAD，DELETE等</param>
+        /// <param name="contentMd5">表示请求内容数据的MD5值，对消息内容（不包括头部）计算MD5值获得128比特位数字，对该数字进行base64编码而得到。
+        /// 该请求头可用于消息合法性的检查（消息内容是否与发送时一致），如”eB5eJF1ptWaXm4bijSPyxw==”，也可以为空。</param>
+        /// <param name="contentType">请求内容的类型，如”application/octet-stream”，也可以为空</param>
+        /// <param name="date">表示此次操作的时间，且必须为HTTP1.1中支持的GMT格式，如”Sun, 22 Nov 2015 08:16:38 GMT”</param>
+        /// <param name="canonicalizedOSSHeaders">表示以“x-oss-”为前缀的http header的组合
+        ///   构建CanonicalizedOSSHeaders的方法：https://help.aliyun.com/document_detail/31951.html?spm=5176.doc31950.6.385.9GhGxu
+        /// </param>
+        /// <param name="canonicalizedResource">表示用户想要访问的OSS资源。详细算法参见文档</param>
+        /// <remarks>
+        /// Date和CanonicalizedResource不能为空；如果请求中的Date时间和OSS服务器的时间差15分钟以上，OSS服务器将拒绝该服务，并返回HTTP 403错误。
+        /// </remarks>
+        /// <returns></returns>
+        public static string HmacSha1Sign(
+            string accessKeySecret,
+            string httpMethod,
+            string contentMd5,
+            string contentType,
+            string date,
+            string canonicalizedOSSHeaders,
+            string canonicalizedResource)
+        {
+            var strToSign =
+                $"{httpMethod.ToUpper()}\n{contentMd5}\n{contentType}\n{date}\n{canonicalizedOSSHeaders}{canonicalizedResource}";
+            //Console.WriteLine("String to sign:" + strToSign);
+            return HmacSha1Sign(accessKeySecret, strToSign);
         }
 
         /// <summary>
