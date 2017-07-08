@@ -5,7 +5,7 @@
   },
 
   "dependencies": {
-    "AliyunSDK.OpenSearch": "1.0.0-*"
+    "AliyunSDK.OpenSearch": "1.0.1-*"
   },
 
   "frameworks": {

@@ -245,7 +245,22 @@ namespace AliCloudOpenSearch.com.API
             {
                 var doc = new Dictionary<string, object>();
                 doc["cmd"] = "delete";
-                doc["fields"] = new {id = docId};
+                doc["fields"] = new { id = docId };
+
+                _batchExecuteCachedDocs.Add(doc);
+            }
+            return this;
+        }
+
+        public CloudsearchDoc Remove(params object[] docIds)
+        {
+            Utilities.Guard(docIds);
+
+            foreach (var docId in docIds)
+            {
+                var doc = new Dictionary<string, object>();
+                doc["cmd"] = "delete";
+                doc["fields"] = docId;
 
                 _batchExecuteCachedDocs.Add(doc);
             }
@@ -537,7 +552,7 @@ namespace AliCloudOpenSearch.com.API
 
         private string[] _extractFieldValue(string value)
         {
-            char[] sep = {HA_DOC_MULTI_VALUE_SEPARATOR};
+            char[] sep = { HA_DOC_MULTI_VALUE_SEPARATOR };
             var split = value.Split(sep, StringSplitOptions.None);
             return split;
         }
